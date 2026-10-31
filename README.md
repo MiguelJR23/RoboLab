@@ -1,9 +1,25 @@
 # RoboLab — site do Robô Desviador de Obstáculos
 
-Site interativo com explicação do robô, a lógica de decisão, o Desafio do Labirinto (robô virtual) e resultados com gráficos. API REST em Node.js + Express e banco MySQL/MariaDB.
+Site interativo com explicação do robô, a lógica de decisão, o Desafio do Labirinto (robô virtual) e resultados com gráficos. API REST em Node.js + Express e banco MySQL.
+
+**Equipe:** Cauã Ribeiro, Marcos Bueno, Miguel Januario e Rafael Nunes.
+
+---
+
+## Acesse o site
+
+**Link:** https://robolab-xf81.onrender.com
+
+> `![QR Code do RoboLab](docs/qr.png)`
+
+Aponte a câmera do celular para o QR Code para abrir o site.
+
+> O site fica em uma hospedagem gratuita que "dorme" quando ninguém acessa. Se a primeira abertura demorar cerca de 1 minuto, é normal: o servidor está acordando.
+
+---
 
 ```
-robolab/
+RoboLab/
   public/       o site (HTML, CSS, JS, Chart.js local)
   server/       API (Express), banco (schema.sql), testes e gerador de QR Code
   PUBLICAR.md   como colocar no ar (GitHub + Render + Aiven) e gerar o QR Code
