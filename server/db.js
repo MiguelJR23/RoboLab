@@ -10,9 +10,18 @@ function configSsl() {
   // Aiven e outros bancos em nuvem exigem conexão segura.
   // DB_CA_FILE: caminho do certificado (ca.pem) do provedor, relativo à pasta server/ ou absoluto.
   // DB_CA: o próprio texto do certificado. DB_SSL=true: usa os certificados do sistema.
-  if (process.env.DB_CA_FILE) {
-    const caminho = path.resolve(__dirname, process.env.DB_CA_FILE);
-    return { ca: fs.readFileSync(caminho, 'utf8'), rejectUnauthorized: true };
+  const valorArquivo = process.env.DB_CA_FILE;
+  if (valorArquivo) {
+    if (/-----BEGIN/.test(valorArquivo)) {
+      return { ca: valorArquivo.replace(/\\n/g, '\n'), rejectUnauthorized: true };
+    }
+    try {
+      return { ca: fs.readFileSync(path.resolve(__dirname, valorArquivo), 'utf8'), rejectUnauthorized: true };
+    } catch (e) {
+      // Não derruba o servidor: o site sobe e o aviso aparece no log.
+      console.error('Não foi possível ler o certificado em DB_CA_FILE ("' + valorArquivo.slice(0, 40) + '"): ' + e.message);
+      console.error('Use apenas o nome do arquivo (ca.pem) e confira se server/ca.pem está no GitHub.');
+    }
   }
   const ca = process.env.DB_CA;
   if (ca) return { ca: ca.replace(/\\n/g, '\n'), rejectUnauthorized: true };
