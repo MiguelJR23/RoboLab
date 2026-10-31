@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Conheça o Robô Desviador de Obstáculos e teste a ideia no Desafio do Labirinto, um robô virtual que decide sozinho por onde ir.">
+  <meta name="theme-color" content="#0e0b16">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="RoboLab — Robô Desviador de Obstáculos">
+  <meta property="og:description" content="Veja como o robô decide e teste no Desafio do Labirinto.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e0b16'/%3E%3Crect x='16' y='18' width='32' height='30' rx='8' fill='%23fb923c'/%3E%3Ccircle cx='32' cy='18' r='6' fill='%23fff7ed'/%3E%3C/svg%3E">
+  <title>RoboLab — Robô Desviador de Obstáculos</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topo">
+    <a class="marca" href="#inicio">Robo<span>Lab</span></a>
+    <nav class="menu" aria-label="Seções do site">
+      <a href="#inicio">Início</a>
+      <a href="#por-dentro"><span class="longo">Por dentro do robô</span><span class="curto">Robô</span></a>
+      <a href="#decide"><span class="longo">Como o robô decide?</span><span class="curto">Decisão</span></a>
+      <a href="#desafio">Desafio</a>
+      <a href="#resultados">Resultados</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ============ INÍCIO ============ -->
+    <section id="inicio" class="secao hero">
+      <div class="hero-texto">
+        <p class="etiqueta">Projeto de Sistemas Embarcados</p>
+        <h1>Robô Desviador de Obstáculos</h1>
+        <p class="lead">Um carrinho autônomo com ESP32 que mede a distância com um sensor ultrassônico, percebe o que está no caminho e muda de direção sozinho, sem ninguém controlando.</p>
+        <p>Este site explica como ele funciona e deixa você testar a ideia em um labirinto virtual.</p>
+        <div class="hero-botoes">
+          <a class="botao principal" href="#desafio">Jogar o Desafio do Labirinto</a>
+          <a class="botao sec" href="#por-dentro">Conhecer o robô</a>
+        </div>
+      </div>
+      <div class="hero-arte" aria-hidden="true">
+        <svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg">
+          <rect x="258" y="40" width="26" height="180" rx="6" fill="#7c3aed"/>
+          <rect x="262" y="48" width="18" height="8" rx="4" fill="rgba(255,255,255,.18)"/>
+          <g class="feixe">
+            <path d="M118 130 L252 80 L252 180 Z" fill="rgba(196,181,253,.28)"/>
+          </g>
+          <g class="carro-hero">
+            <rect x="40" y="108" width="82" height="44" rx="10" fill="#fb923c"/>
+            <rect x="52" y="98" width="20" height="10" rx="3" fill="#0b0912"/>
+            <rect x="52" y="152" width="20" height="10" rx="3" fill="#0b0912"/>
+            <rect x="92" y="98" width="20" height="10" rx="3" fill="#0b0912"/>
+            <rect x="92" y="152" width="20" height="10" rx="3" fill="#0b0912"/>
+            <circle cx="122" cy="130" r="7" fill="#fff7ed"/>
+            <circle cx="64" cy="130" r="7" fill="#1c1206" opacity=".35"/>
+          </g>
+          <text x="190" y="62" class="hero-leitura">obstáculo a 15 cm</text>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ============ POR DENTRO DO ROBÔ ============ -->
+    <section id="por-dentro" class="secao">
+      <h2>Por dentro do robô</h2>
+      <p class="intro">Visto de cima, com a frente para cima. Clique em uma peça (ou use os botões abaixo da ilustração) para ver o que ela faz.</p>
+      <div class="duas-colunas">
+        <div class="cartao ilustracao">
+          <svg id="svgRobo" viewBox="0 0 320 400" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Ilustração do carrinho visto de cima">
+            <!-- estrutura -->
+            <g class="comp" data-comp="estrutura" tabindex="0" role="button" aria-label="Estrutura: chassi, rodas e roda boba">
+              <rect class="forma" x="60" y="40" width="200" height="320" rx="26" fill="#211a33" stroke="#6d4fc2" stroke-width="2"/>
+              <rect class="forma" x="38" y="170" width="26" height="86" rx="7" fill="#0b0912" stroke="#6d4fc2" stroke-width="2"/>
+              <rect class="forma" x="256" y="170" width="26" height="86" rx="7" fill="#0b0912" stroke="#6d4fc2" stroke-width="2"/>
+              <circle class="forma" cx="160" cy="376" r="11" fill="#0b0912" stroke="#6d4fc2" stroke-width="2"/>
+            </g>
+            <!-- motores -->
+            <g class="comp" data-comp="motores" tabindex="0" role="button" aria-label="Motores DC">
+              <rect class="forma" x="68" y="182" width="30" height="62" rx="6" fill="#3b2a66" stroke="#a78bfa" stroke-width="2"/>
+              <rect class="forma" x="222" y="182" width="30" height="62" rx="6" fill="#3b2a66" stroke="#a78bfa" stroke-width="2"/>
+            </g>
+            <!-- energia -->
+            <g class="comp" data-comp="energia" tabindex="0" role="button" aria-label="Baterias e case">
+              <rect class="forma" x="96" y="290" width="128" height="54" rx="8" fill="#2c3a2f" stroke="#34d399" stroke-width="2"/>
+              <rect x="106" y="300" width="48" height="34" rx="5" fill="#1d2a20"/>
+              <rect x="166" y="300" width="48" height="34" rx="5" fill="#1d2a20"/>
+            </g>
+            <!-- ponte H -->
+            <g class="comp" data-comp="ponteh" tabindex="0" role="button" aria-label="Ponte H L298N">
+              <rect class="forma" x="108" y="196" width="104" height="70" rx="6" fill="#5b1f2e" stroke="#f87171" stroke-width="2"/>
+              <rect x="124" y="208" width="72" height="26" rx="3" fill="#2b0f16"/>
+              <text x="160" y="254" text-anchor="middle" class="rotulo-svg">L298N</text>
+            </g>
+            <!-- conexões: protoboard e jumpers -->
+            <g class="comp" data-comp="conexoes" tabindex="0" role="button" aria-label="Protoboard e jumpers">
+              <rect class="forma" x="104" y="96" width="112" height="82" rx="6" fill="#e7e1d6" stroke="#a89f8e" stroke-width="2"/>
+              <path d="M160 178 C160 188 160 190 160 196" stroke="#fbbf24" stroke-width="3" fill="none"/>
+              <path d="M112 178 C98 190 90 200 84 182" stroke="#38bdf8" stroke-width="3" fill="none"/>
+              <path d="M208 178 C222 190 230 200 236 182" stroke="#34d399" stroke-width="3" fill="none"/>
+              <path d="M130 266 C130 276 130 282 130 290" stroke="#f87171" stroke-width="3" fill="none"/>
+              <path d="M190 266 C190 276 190 282 190 290" stroke="#111" stroke-width="3" fill="none"/>
+            </g>
+            <!-- ESP32 -->
+            <g class="comp" data-comp="esp32" tabindex="0" role="button" aria-label="ESP32">
+              <rect class="forma" x="116" y="106" width="88" height="62" rx="5" fill="#16202e" stroke="#38bdf8" stroke-width="2"/>
+              <rect x="146" y="112" width="28" height="22" rx="2" fill="#9aa4b2"/>
+              <text x="160" y="156" text-anchor="middle" class="rotulo-svg">ESP32</text>
+            </g>
+            <!-- servo + sensor -->
+            <g class="comp" data-comp="servo" tabindex="0" role="button" aria-label="Servo motor">
+              <rect class="forma" x="146" y="44" width="28" height="24" rx="4" fill="#1d3a5a" stroke="#38bdf8" stroke-width="2"/>
+            </g>
+            <g class="comp" data-comp="ultrassonico" tabindex="0" role="button" aria-label="Sensor ultrassônico">
+              <rect class="forma" x="118" y="10" width="84" height="34" rx="6" fill="#1f5f8a" stroke="#7dd3fc" stroke-width="2"/>
+              <circle cx="140" cy="27" r="11" fill="#0b0912" stroke="#bae6fd" stroke-width="2"/>
+              <circle cx="180" cy="27" r="11" fill="#0b0912" stroke="#bae6fd" stroke-width="2"/>
+            </g>
+            <!-- LEDs e buzzer -->
+            <g class="comp" data-comp="sinalizacao" tabindex="0" role="button" aria-label="LEDs e buzzer">
+              <circle class="forma" cx="82" cy="70" r="9" fill="#fbbf24" stroke="#fde68a" stroke-width="2"/>
+              <circle class="forma" cx="238" cy="70" r="9" fill="#fbbf24" stroke="#fde68a" stroke-width="2"/>
+              <circle class="forma" cx="82" cy="338" r="9" fill="#ef4444" stroke="#fca5a5" stroke-width="2"/>
+              <circle class="forma" cx="238" cy="338" r="9" fill="#ef4444" stroke="#fca5a5" stroke-width="2"/>
+              <circle class="forma" cx="238" cy="112" r="9" fill="#0b0912" stroke="#c4b5fd" stroke-width="2"/>
+              <circle cx="238" cy="112" r="3" fill="#c4b5fd"/>
+            </g>
+            <text x="160" y="396" text-anchor="middle" class="rotulo-svg suave">traseira</text>
+          </svg>
+          <div id="listaComp" class="lista-comp" role="group" aria-label="Escolher peça"></div>
+        </div>
+
+        <article id="infoComp" class="cartao info-comp" aria-live="polite">
+          <p class="etiqueta" id="infoQtd"></p>
+          <h3 id="infoNome"></h3>
+          <p class="rotulo">O que faz</p>
+          <p id="infoFuncao" class="valor"></p>
+          <p class="rotulo">Por que é importante</p>
+          <p id="infoImportancia" class="valor"></p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ============ COMO O ROBÔ DECIDE ============ -->
+    <section id="decide" class="secao">
+      <h2>Como o robô decide?</h2>
+      <p class="intro">O ciclo se repete o tempo todo. Mova a distância lida pelo sensor e veja qual caminho o robô segue.</p>
+      <div class="duas-colunas decide-grid">
+        <ol id="passos" class="passos"></ol>
+        <div class="cartao">
+          <label class="rotulo" for="distancia">Distância à frente lida pelo sensor</label>
+          <div class="medidor">
+            <span id="distValor" class="grande">80 cm</span>
+            <input type="range" id="distancia" min="5" max="110" step="5" value="80">
+          </div>
+          <p class="rotulo">Condição</p>
+          <p id="decCondicao" class="valor"></p>
+          <p class="rotulo">Decisão</p>
+          <p id="decDecisao" class="valor destaque"></p>
+          <button type="button" id="btnReproduzir" class="sec">Reproduzir o ciclo</button>
+          <p class="dica">Limite usado na simulação: abaixo de 20 cm é obstáculo.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DESAFIO ============ -->
+    <section id="desafio" class="secao">
+      <h2>Desafio do Labirinto</h2>
+      <p class="intro">Monte um percurso, escolha o início e o destino e acompanhe o robô virtual decidindo sozinho.</p>
+      <div class="layout">
+        <section class="palco" aria-label="Simulação">
+          <div class="barra" role="toolbar" aria-label="Ferramentas de edição">
+            <button type="button" class="ferr ativa" data-ferramenta="parede" aria-pressed="true">Parede</button>
+            <button type="button" class="ferr" data-ferramenta="apagar" aria-pressed="false">Apagar</button>
+            <button type="button" class="ferr" data-ferramenta="inicio" aria-pressed="false">Início</button>
+            <button type="button" class="ferr" data-ferramenta="destino" aria-pressed="false">Destino</button>
+            <button type="button" id="btnLimpar" class="sec">Limpar paredes</button>
+            <button type="button" id="btnDesenho" class="sec so-toque" aria-pressed="false">Desenhar arrastando</button>
+          </div>
+
+          <div id="mensagem" class="mensagem" role="status" aria-live="polite"></div>
+
+          <div class="tela">
+            <canvas id="labirinto" aria-label="Grade do labirinto"></canvas>
+          </div>
+
+          <p id="legenda" class="legenda" aria-hidden="true"></p>
+
+          <div class="controles">
+            <div class="botoes-exec">
+              <button type="button" id="btnIniciar" class="principal">Iniciar</button>
+              <button type="button" id="btnPasso" class="sec">Um passo</button>
+              <button type="button" id="btnReiniciar" class="sec">Reiniciar</button>
+            </div>
+            <div class="opcoes">
+              <label class="campo-inline">Velocidade
+                <input type="range" id="velocidade" min="1" max="10" value="5">
+              </label>
+              <label class="campo-inline marcar">
+                <input type="checkbox" id="ruido"> Ruído no sensor
+              </label>
+            </div>
+          </div>
+          <p class="dica"><span class="so-mouse">Clique ou arraste na grade para editar.</span><span class="so-toque">Toque em uma célula para marcar ou desmarcar a parede.</span> Com o ruído ligado, o sensor às vezes erra a leitura e o robô pode colidir.</p>
+        </section>
+
+        <aside class="painel">
+          <section class="cartao c-cenario">
+            <h3>Cenário</h3>
+            <select id="seletorCenario" aria-label="Escolher cenário"></select>
+            <div class="linha">
+              <input type="text" id="nomeCenario" maxlength="40" placeholder="Nome para salvar este percurso">
+              <button type="button" id="btnSalvar" class="sec">Salvar</button>
+            </div>
+            <button type="button" id="btnExcluir" class="perigo" hidden>Excluir cenário salvo</button>
+          </section>
+
+          <section class="cartao c-sensor">
+            <h3>Sensor e decisão</h3>
+            <dl class="sensor">
+              <div><dt>Frente</dt><dd id="sFrente">—</dd></div>
+              <div><dt>Esquerda</dt><dd id="sEsquerda">—</dd></div>
+              <div><dt>Direita</dt><dd id="sDireita">—</dd></div>
+            </dl>
+            <p class="rotulo">Condição</p>
+            <p id="sCondicao" class="valor">Aguardando início</p>
+            <p class="rotulo">Decisão</p>
+            <p id="sDecisao" class="valor destaque">—</p>
+          </section>
+
+          <section class="cartao c-tentativa">
+            <h3>Tentativa atual</h3>
+            <dl class="stats">
+              <div><dt>Tempo</dt><dd id="eTempo">0,0 s</dd></div>
+              <div><dt>Ações</dt><dd id="ePassos">0</dd></div>
+              <div><dt>Colisões</dt><dd id="eColisoes">0</dd></div>
+              <div><dt>Tentativa nº</dt><dd id="eTentativa">1</dd></div>
+            </dl>
+            <p id="eStatus" class="status">Pronto</p>
+          </section>
+
+          <section class="cartao c-registro">
+            <h3>Registro do robô</h3>
+            <ol id="listaRegistro" class="registro"></ol>
+          </section>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ RESULTADOS ============ -->
+    <section id="resultados" class="secao">
+      <h2>Resultados e experimentos</h2>
+      <p class="intro">Veja como o robô virtual se saiu nas suas tentativas.</p>
+      <p id="modoArmazenamento" class="modo" role="status"></p>
+
+      <div class="resumo" id="resumo">
+        <div class="cartao"><span class="rotulo">Testes</span><span class="grande" id="rTotal">0</span></div>
+        <div class="cartao"><span class="rotulo">Taxa de sucesso</span><span class="grande" id="rTaxa">—</span></div>
+        <div class="cartao"><span class="rotulo">Tempo médio (concluídos)</span><span class="grande" id="rTempo">—</span></div>
+        <div class="cartao"><span class="rotulo">Colisões no total</span><span class="grande" id="rColisoes">0</span></div>
+      </div>
+
+      <p id="semResultados" class="vazio">Nenhum teste registrado ainda. Rode uma simulação até o fim no Desafio para ver os gráficos aqui.</p>
+
+      <div id="graficos" class="graficos" hidden>
+        <figure class="cartao grafico">
+          <figcaption>Tempo por tentativa (s) <small>verde: concluído &middot; vermelho: bloqueado</small></figcaption>
+          <div class="caixa-grafico"><canvas id="gTempo" aria-label="Gráfico do tempo por tentativa"></canvas></div>
+        </figure>
+        <figure class="cartao grafico">
+          <figcaption>Taxa de sucesso por cenário (%)</figcaption>
+          <div class="caixa-grafico"><canvas id="gSucesso" aria-label="Gráfico da taxa de sucesso por cenário"></canvas></div>
+        </figure>
+        <figure class="cartao grafico">
+          <figcaption>Média de colisões por tentativa</figcaption>
+          <div class="caixa-grafico"><canvas id="gColisoes" aria-label="Gráfico de colisões por cenário"></canvas></div>
+        </figure>
+      </div>
+
+      <div class="cartao" style="margin-top:16px">
+        <h3>Histórico de testes</h3>
+        <div class="tabela-rolagem">
+          <table>
+            <thead>
+              <tr><th>Cenário</th><th>Tentativa</th><th>Tempo</th><th>Colisões</th><th>Ruído</th><th>Resultado</th><th></th></tr>
+            </thead>
+            <tbody id="corpoHistorico"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p>RoboLab &middot; Projeto Robô Desviador de Obstáculos &middot; Cauã Ribeiro, Marcos Bueno, Miguel Januario e Rafael Nunes</p>
+  </footer>
+
+  <script src="js/vendor/chart.umd.min.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/secoes.js"></script>
+  <script src="js/resultados.js"></script>
+  <script src="js/nav.js"></script>
+</body>
+</html>
