@@ -10,7 +10,7 @@ Site interativo com explicação do robô, a lógica de decisão, o Desafio do L
 
 **Link:** https://robolab-xf81.onrender.com
 
-> `![QR Code do RoboLab](docs/qr.png)`
+![QR Code do RoboLab](docs/qr.png)
 
 Aponte a câmera do celular para o QR Code para abrir o site.
 
