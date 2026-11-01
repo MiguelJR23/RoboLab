@@ -1,0 +1,48 @@
+:root{--fundo:#0f1419;--painel:#182029;--borda:#26323f;--texto:#e8eef4;--suave:#93a4b5;--azul:#4cc2ff;--verde:#4ade80;--vermelho:#f87171;--amarelo:#fbbf24}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--texto);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--azul)}
+code{background:#0b0f14;padding:1px 6px;border-radius:4px}
+.suave{color:var(--suave)}
+.erro{color:var(--vermelho)}
+.centro{min-height:100vh;display:grid;place-items:center;padding:16px}
+.caixa{background:var(--painel);border:1px solid var(--borda);border-radius:14px;padding:24px;width:100%;max-width:380px}
+.caixa h1{margin:0 0 4px;font-size:1.4rem}
+label{display:block;margin:16px 0 6px;color:var(--suave);font-size:.9rem}
+input[type=password]{width:100%;padding:12px;border-radius:8px;border:1px solid var(--borda);background:#0b0f14;color:var(--texto);font-size:16px}
+.btn{display:inline-block;margin-top:16px;padding:12px 18px;min-height:44px;border:0;border-radius:8px;background:var(--azul);color:#04121c;font-weight:700;font-size:1rem;text-decoration:none;cursor:pointer}
+.btn.sec{background:transparent;color:var(--texto);border:1px solid var(--borda);margin-top:0}
+header.topo{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--borda);background:var(--painel)}
+header.topo h1{margin:0;font-size:1.15rem}
+header.topo nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+header.topo form{margin:0}
+main.pagina{max-width:1100px;margin:0 auto;padding:16px}
+h2{font-size:1.05rem;margin:28px 0 10px;color:var(--suave);text-transform:uppercase;letter-spacing:.06em}
+.cartoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.cartao{background:var(--painel);border:1px solid var(--borda);border-radius:12px;padding:14px}
+.cartao b{display:block;font-size:2rem;line-height:1.1}
+.cartao span{color:var(--suave);font-size:.85rem}
+.tabela-rolavel{overflow-x:auto;border:1px solid var(--borda);border-radius:12px;background:var(--painel)}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--borda);white-space:nowrap}
+th{color:var(--suave);font-weight:600;font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.ok{color:var(--verde)}.nok{color:var(--vermelho)}
+.barras{display:flex;align-items:flex-end;gap:3px;height:90px;background:var(--painel);border:1px solid var(--borda);border-radius:12px;padding:10px}
+.barras i{flex:1;background:var(--azul);border-radius:3px 3px 0 0;min-height:2px}
+.eixo{display:flex;justify-content:space-between;color:var(--suave);font-size:.75rem;padding:4px 4px 0}
+.aviso{background:#3a2e10;border:1px solid #6b5416;color:var(--amarelo);padding:12px 14px;border-radius:10px}
+/* placar da feira (TV) */
+body.tv{padding:3vh 4vw}
+.tv h1{font-size:clamp(2rem,5vw,4rem);margin:0 0 2vh}
+.tv .grande{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2vw;margin-bottom:4vh}
+.tv .grande .cartao b{font-size:clamp(3rem,8vw,6rem);color:var(--azul)}
+.tv .grande .cartao span{font-size:clamp(1rem,2vw,1.5rem)}
+.tv .duas{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2vw}
+.tv ol{margin:0;padding:0;list-style:none;counter-reset:n}
+.tv li{counter-increment:n;display:flex;justify-content:space-between;gap:12px;padding:1.2vh 0;border-bottom:1px solid var(--borda);font-size:clamp(1.1rem,2.2vw,1.8rem)}
+.tv li::before{content:counter(n) "º";color:var(--amarelo);font-weight:700;min-width:2.2ch}
+.tv li span{flex:1}
+.tv li b{color:var(--verde)}
+.tv h2{font-size:clamp(1rem,2vw,1.4rem)}
+@media (max-width:480px){.cartao b{font-size:1.7rem}}

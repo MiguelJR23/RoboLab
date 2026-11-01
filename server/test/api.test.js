@@ -10,6 +10,7 @@ function repoMemoria() {
   let rId = 0;
   let cenarios = [];
   let resultados = [];
+  const visitas = new Map();
   const limpo = (o) => { if (!o) return null; const c = Object.assign({}, o); delete c._v; return c; };
   return {
     async listarCenarios(v) { return cenarios.filter((c) => c._v === v).map(limpo); },
@@ -21,7 +22,9 @@ function repoMemoria() {
     async obterResultado(id, v) { return limpo(resultados.find((r) => r.id === id && r._v === v)); },
     async criarResultado(d, v) { const r = Object.assign({ id: String(++rId), data: new Date().toISOString(), _v: v }, d); resultados.push(r); return limpo(r); },
     async atualizarResultado(id, d, v) { const i = resultados.findIndex((r) => r.id === id && r._v === v); if (i < 0) return null; resultados[i] = Object.assign({}, resultados[i], d); return limpo(resultados[i]); },
-    async excluirResultado(id, v) { const n = resultados.length; resultados = resultados.filter((r) => !(r.id === id && r._v === v)); return resultados.length < n; }
+    async excluirResultado(id, v) { const n = resultados.length; resultados = resultados.filter((r) => !(r.id === id && r._v === v)); return resultados.length < n; },
+    async registrarVisita(v) { const x = visitas.get(v); if (x) x.acessos++; else visitas.set(v, { acessos: 1 }); },
+    visitas
   };
 }
 
@@ -32,7 +35,8 @@ const BRUNO = 'a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d';
 
 async function main() {
   let bancoOk = true;
-  const servidor = http.createServer(criarApp(repoMemoria(), {
+  const repo = repoMemoria();
+  const servidor = http.createServer(criarApp(repo, {
     saude: async () => { if (!bancoOk) throw new Error('fora'); },
     limitePorMinuto: 1000
   }));
@@ -160,6 +164,18 @@ async function main() {
   r = await chamar('POST', '/api/cenarios', { nome: 'extra', configuracao: LAB });
   assert.strictEqual(r.status, 201);
   ok('limite de 30 cenários por visitante (409) sem afetar os outros');
+
+  // --- contagem de acessos ---
+  r = await chamar('POST', '/api/visita'); assert.strictEqual(r.status, 204);
+  r = await chamar('POST', '/api/visita'); assert.strictEqual(r.status, 204);
+  r = await chamar('POST', '/api/visita', undefined, { visitante: BRUNO }); assert.strictEqual(r.status, 204);
+  assert.strictEqual(repo.visitas.size, 2);
+  assert.strictEqual(repo.visitas.get(ANA).acessos, 2);
+  r = await chamar('POST', '/api/visita', undefined, { semVisitante: true }); assert.strictEqual(r.status, 400);
+  r = await chamar('POST', '/api/visita', undefined, { visitante: 'nao-e-uuid' }); assert.strictEqual(r.status, 400);
+  r = await chamar('GET', '/api/visita'); assert.strictEqual(r.status, 404);
+  assert.strictEqual(repo.visitas.size, 2);
+  ok('POST /api/visita conta aparelhos e reaberturas; sem X-Visitante válido -> 400; a API não expõe a contagem');
 
   // --- saúde, segurança e geral ---
   r = await chamar('GET', '/api/saude', undefined, { semVisitante: true }); assert.strictEqual(r.status, 200);

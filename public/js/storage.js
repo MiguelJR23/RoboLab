@@ -181,6 +181,16 @@
   let modo = null;                // 'api' | 'local'
   let verificando = null;
 
+  // Avisa o servidor que este aparelho abriu o site (só uma vez por sessão do navegador).
+  // É silencioso: se falhar, nada muda para o visitante. Só envia o identificador aleatório.
+  function avisarAcesso() {
+    try {
+      if (sessionStorage.getItem('robolab.acesso')) return;
+      sessionStorage.setItem('robolab.acesso', '1');
+    } catch (e) { /* sessionStorage bloqueado: avisa a cada abertura da página */ }
+    chamar('POST', '/visita').catch(() => {});
+  }
+
   function detectar() {
     if (!verificando) {
       verificando = chamar('GET', '/saude')
@@ -188,6 +198,7 @@
         .catch(() => { modo = 'local'; })
         .then(() => {
           document.dispatchEvent(new CustomEvent('robolab:modo', { detail: modo }));
+          if (modo === 'api') avisarAcesso();
         });
     }
     return verificando;

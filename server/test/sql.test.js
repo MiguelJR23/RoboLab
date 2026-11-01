@@ -41,6 +41,7 @@ const pool = {
   await repo.atualizarCenario('1', d, V); await repo.excluirCenario('1', V);
   await repo.listarResultados(V); await repo.listarResultados(V, '1'); await repo.obterResultado('1', V);
   await repo.criarResultado(r, V); await repo.atualizarResultado('1', r, V); await repo.excluirResultado('1', V);
+  await repo.registrarVisita(V);
 
   // toda consulta que lê ou altera dados precisa filtrar por visitante
   vistas.forEach((s) => assert.ok(/visitante_id/.test(s), 'consulta sem filtro de visitante: ' + s));
@@ -48,7 +49,7 @@ const pool = {
   // o schema.sql também precisa ser válido
   const sql = fs.readFileSync(path.join(__dirname, '..', 'schema.sql'), 'utf8')
     .split('\n').filter((l) => !l.trim().startsWith('--')).join('\n').split(';').map((s) => s.trim()).filter(Boolean);
-  assert.strictEqual(sql.length, 2);
+  assert.strictEqual(sql.length, 3);
   sql.forEach((c) => parser.astify(c, { database: 'MySQL' }));
 
   console.log('  ok  ' + vistas.length + ' consultas SQL e o schema.sql são válidos para o parser MySQL e filtram por visitante');

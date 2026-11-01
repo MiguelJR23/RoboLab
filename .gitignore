@@ -4,3 +4,6 @@ node_modules/
 .DS_Store
 qr-robolab.png
 qr-robolab.svg
+# painel PHP (senha e banco ficam só no seu computador)
+admin/config.php
+*.sqlite

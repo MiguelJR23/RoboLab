@@ -38,3 +38,13 @@ CREATE TABLE IF NOT EXISTS resultados (
     FOREIGN KEY (cenario_id) REFERENCES cenarios (id)
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+CREATE TABLE IF NOT EXISTS visitas (
+  visitante_id     CHAR(36)      NOT NULL,
+  primeiro_acesso  DATETIME      NOT NULL,
+  ultimo_acesso    DATETIME      NOT NULL,
+  acessos          INT UNSIGNED  NOT NULL DEFAULT 1,
+  PRIMARY KEY (visitante_id),
+  INDEX idx_visitas_primeiro (primeiro_acesso)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

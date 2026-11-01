@@ -158,9 +158,20 @@ function criarRepositorio(pool) {
       return r.affectedRows ? this.obterResultado(id, v) : null;
     },
 
-    async excluirResultado(id, v) {
+        async excluirResultado(id, v) {
       const [r] = await pool.query('DELETE FROM resultados WHERE id = ? AND visitante_id = ?', [id, v]);
       return r.affectedRows > 0;
+    },
+
+    // Conta um acesso: cria o registro do aparelho ou atualiza o último acesso e soma 1.
+    async registrarVisita(v) {
+      const agora = new Date();
+      await pool.query(
+        `INSERT INTO visitas (visitante_id, primeiro_acesso, ultimo_acesso, acessos)
+         VALUES (?, ?, ?, 1)
+         ON DUPLICATE KEY UPDATE ultimo_acesso = ?, acessos = acessos + 1`,
+        [v, agora, agora, agora]
+      );
     }
   };
 }

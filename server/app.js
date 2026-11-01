@@ -149,7 +149,14 @@ function criarApp(repo, opcoes) {
     res.json({ ok: true });
   }));
 
-  app.use(['/api/cenarios', '/api/resultados'], exigirVisitante);
+  app.use(['/api/cenarios', '/api/resultados', '/api/visita'], exigirVisitante);
+
+  /* Acessos: o site avisa uma vez por sessão. Só grava; a contagem não é exposta pela API
+     (quem lê os números é o painel PHP, direto no banco). */
+  app.post('/api/visita', rota(async (req, res) => {
+    await repo.registrarVisita(req.visitante);
+    res.sendStatus(204);
+  }));
 
   /* Cenários */
   app.get('/api/cenarios', rota(async (req, res) => res.json(await repo.listarCenarios(req.visitante))));
